@@ -10,8 +10,6 @@ using Park.Models;
 using Park.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using System.Security.Claims;
 
 namespace Park.Controllers
@@ -30,70 +28,65 @@ namespace Park.Controllers
         }
 
         // GET: api/NationalParks
-        [Authorize(AuthenticationSchemes = "Bearer")]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<NationalPark>>> GetNationalParks()
         {
             return await _context.NationalParks.ToListAsync();
         }
 
-        // GET: api/Threads/5
-        // [HttpGet("{id}")]
-        // public async Task<ActionResult<ThreadDTO>> GetThread(int id)
-        // {
-        //     var thread = await _context.Threads
-        //         .Where(x => x.ThreadId == id)
-        //         .ProjectTo<ThreadDTO>(_mapper.ConfigurationProvider)
-        //         .SingleOrDefaultAsync();
+        // GET: api/nationalparks/5
+        [AllowAnonymous]
+        [HttpGet("{id}")]
+        public async Task<ActionResult<NationalPark>> GetNationalPark(int id)
+        {
+            var nationalPark = await _context.NationalParks.FirstOrDefaultAsync(park => park.NationalParkId == id);
+                
+            if (nationalPark == null)
+            {
+                return NotFound();
+            }
 
-        //     if (thread == null)
-        //     {
-        //         return NotFound();
-        //     }
+            return nationalPark;
+        }
 
-        //     return thread;
-        // }
+        // PUT: api/nationalparks/5
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutThread(int id, NationalPark nationalPark)
+        {
+            string name = User.Claims.First().Value;
+            var currentUser = await _userManager.FindByNameAsync(name);
+            if(nationalPark.UserId != currentUser.Id)
+            {
+                return BadRequest();
+            }
+            if (id != nationalPark.NationalParkId)
+            {
+                return BadRequest();
+            }
 
-        // // PUT: api/Threads/5
-        // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // [HttpPut("{id}")]
-        // public async Task<IActionResult> PutThread(int id, ThreadDTO thread, string userId)
-        // {
-        //     var thisThread = await _context.Threads.FindAsync(id);
-        //     if(thisThread == null) return NotFound();
-        //     if(thread.UserId != userId)
-        //     {
-        //         return BadRequest();
-        //     }
-        //     if (id != thread.ThreadId)
-        //     {
-        //         return BadRequest();
-        //     }
-        //     _mapper.Map(thread, thisThread);
+            _context.Entry(nationalPark).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!NationalParkExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-        //     _context.Threads.Update(thisThread);
-        //     // _context.Entry(model).State = EntityState.Modified;
-        //     try
-        //     {
-        //         await _context.SaveChangesAsync();
-        //     }
-        //     catch (DbUpdateConcurrencyException)
-        //     {
-        //         if (!ThreadExists(id))
-        //         {
-        //             return NotFound();
-        //         }
-        //         else
-        //         {
-        //             throw;
-        //         }
-        //     }
+            return Ok();
+        }
 
-        //     return Ok();
-        // }
-
-        // POST: api/Threads
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/nationalparks
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPost]
         public async Task<ActionResult<NationalPark>> PostNationalPark(AddNationalParkDTO model)
@@ -114,28 +107,25 @@ namespace Park.Controllers
           return CreatedAtAction("GetNationalParks", new { id = nationalPark.NationalParkId });
         }
 
-        // // DELETE: api/Threads/5
-        // [HttpDelete("{id}")]
-        // public async Task<IActionResult> DeleteThread(int id, string userId)
-        // {
-        //     var thread = await _context.Threads.FindAsync(id);
-        //     if (thread == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     if (userId == thread.User.Id)
-        //     {
-        //         _context.Threads.Remove(thread);
-        //         await _context.SaveChangesAsync();
-        //         return NoContent();
-        //     }
+        // DELETE: api/nationalParks/5
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteNationalPark(int id)
+        {
+            var nationalPark = await _context.NationalParks.FirstOrDefaultAsync(park => park.NationalParkId == id);
+            if(nationalPark == null)
+            {
+                return NotFound();
+            }
+           
+            _context.NationalParks.Remove(nationalPark);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
 
-        //     return BadRequest();
-        // }
-
-        // private bool ThreadExists(int id)
-        // {
-        //     return _context.Threads.Any(e => e.ThreadId == id);
-        // }
+        private bool NationalParkExists(int id)
+        {
+            return _context.NationalParks.Any(park => park.NationalParkId == id);
+        }
     }
 }
