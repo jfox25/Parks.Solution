@@ -11,6 +11,10 @@ using Park.Interfaces;
 using Park.Services;
 using System.Text;
 using Park.Models;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.IO;
+using System;
 
 namespace Park
 {
@@ -23,20 +27,34 @@ namespace Park
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Parks API",
+                    Description = "API for national and state parks",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "James Fox",
+                        Email = "jimmyfox00@gmail.com",
+                    }
+                });
 
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
             services.AddDbContext<ParkContext>(options =>
             {
                 options.UseMySql(Configuration["ConnectionStrings:DefaultConnection"], ServerVersion.AutoDetect(Configuration["ConnectionStrings:DefaultConnection"]));
-                options.EnableSensitiveDataLogging();
 
             });
                 
             services.AddControllers();
 
-            // services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ParkContext>()
@@ -69,6 +87,12 @@ namespace Park
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CretaceousPark API V");
+                c.RoutePrefix = string.Empty;
+            });
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
