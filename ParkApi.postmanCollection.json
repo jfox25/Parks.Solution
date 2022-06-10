@@ -1,0 +1,341 @@
+{
+	"info": {
+		"_postman_id": "b08aa2b6-36b5-485f-8086-888216f3ff90",
+		"name": "ParkApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Email\" : \"test@test.com\",\n    \"Password\" : \"hi\",\n    \"ConfirmPassword\" : \"hi\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/account/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"account",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Email\" : \"test@test.com\",\n    \"Password\" : \"hi\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/api/account/login",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"account",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetNationalParks",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJ0ZXN0QHRlc3QuY29tIiwibmJmIjoxNjU0ODgxNDkxLCJleHAiOjE2NTU0ODYyOTEsImlhdCI6MTY1NDg4MTQ5MX0.EyA5e6aKD_LwaqK_TslL7xH8cwUbTPKeC1Yc3NkrBqgUnuXSDRxfKuZ-Xlp2RYUIKFFeDO3xApUsR51K0qtIpQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/nationalparks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"nationalparks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddNationalPark",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJ0ZXN0QHRlc3QuY29tIiwibmJmIjoxNjU0ODgxNDkxLCJleHAiOjE2NTU0ODYyOTEsImlhdCI6MTY1NDg4MTQ5MX0.EyA5e6aKD_LwaqK_TslL7xH8cwUbTPKeC1Yc3NkrBqgUnuXSDRxfKuZ-Xlp2RYUIKFFeDO3xApUsR51K0qtIpQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\" : \"Grand Caynon\",\n    \"totalNumberofVisitors\" : \"104203\",\n    \"StateName\" : \"Arizona\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/nationalparks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"nationalparks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetNationalPark",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/nationalparks/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"nationalparks",
+						"1"
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJ0ZXN0QHRlc3QuY29tIiwibmJmIjoxNjU0ODgxNDkxLCJleHAiOjE2NTU0ODYyOTEsImlhdCI6MTY1NDg4MTQ5MX0.EyA5e6aKD_LwaqK_TslL7xH8cwUbTPKeC1Yc3NkrBqgUnuXSDRxfKuZ-Xlp2RYUIKFFeDO3xApUsR51K0qtIpQ",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateNationalPark",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"nationalParkId\": 1,\n    \"name\": \"Yellowstone(Edit)\",\n    \"totalNumberofVisitors\": 103203,\n    \"stateName\": \"Montana(Edit)\",\n    \"userId\": \"0463d970-3806-4651-aa3a-109ff514a10e\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/nationalparks/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"nationalparks",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteNationalPark",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5000/api/nationalparks/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"nationalparks",
+						"1"
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": "{{token}}",
+							"description": "en",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStateParks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/stateparks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"stateparks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddStatePark",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\" : \"Catalina State Park\",\n    \"totalNumberofVisitors\" : \"1020\",\n    \"StateName\" : \"Arizona\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/stateparks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"stateparks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetStatePark",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/stateparks/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"stateparks",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateStatePark",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"stateparkId\" : 1,\n    \"name\" : \"Catalina State Park(edit)\",\n    \"totalNumberofVisitors\" : \"1020\",\n    \"StateName\" : \"Arizona(edit)\",\n    \"UserId\" : \"0463d970-3806-4651-aa3a-109ff514a10e\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/stateparks/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"stateparks",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
