@@ -98,19 +98,20 @@ namespace Park.Controllers
         [HttpPost]
         public async Task<ActionResult<NationalPark>> PostNationalPark(AddNationalParkDTO model)
         {
-          Console.WriteLine("Name :" + User.Identity.Name);
-            var currentUser = await _userManager.FindByNameAsync(User.Identity.Name);
-    
-            NationalPark nationalPark = new NationalPark() {
-                Name = model.Name,
-                TotalNumberofVisitors = model.TotalNumberofVisitors,
-                StateName = model.StateName,
-                UserId = currentUser.Id,
-            };
-            _context.NationalParks.Add(nationalPark);
-            await _context.SaveChangesAsync();
+          Console.WriteLine("Name :" + User.Claims.First().Value);
+          string name = User.Claims.First().Value;
+          var currentUser = await _userManager.FindByNameAsync(name);
+  
+          NationalPark nationalPark = new NationalPark() {
+              Name = model.Name,
+              TotalNumberofVisitors = model.TotalNumberofVisitors,
+              StateName = model.StateName,
+              UserId = currentUser.Id,
+          };
+          _context.NationalParks.Add(nationalPark);
+          await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetNationalPark", new { id = nationalPark.NationalParkId });
+          return CreatedAtAction("GetNationalParks", new { id = nationalPark.NationalParkId });
         }
 
         // // DELETE: api/Threads/5
