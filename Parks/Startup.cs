@@ -1,18 +1,18 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Park.Interfaces;
+using Park.Services;
+using System.Text;
+using Park.Models;
 
-namespace Parks.Solution
+namespace Park
 {
     public class Startup
     {
@@ -36,7 +36,7 @@ namespace Parks.Solution
                 
             services.AddControllers();
 
-            services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
+            // services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ParkContext>()
@@ -51,7 +51,19 @@ namespace Parks.Solution
                 options.Password.RequireUppercase = false;
                 options.Password.RequiredUniqueChars = 0;
             });
-
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes( Configuration["TokenKey"])),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
